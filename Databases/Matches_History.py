@@ -11,6 +11,11 @@ class MatchesHistory:
     duplicate_interval_datetime = datetime.timedelta(seconds=duplicate_interval_second)
     last_ticket_time = datetime.datetime.now() - duplicate_interval_datetime
     last_ticket_id = -1
+    logger = None
+
+    def __init__(self, _logger):
+        self.logger = _logger
+
 
     def store_ticket(self, id, time, image_obj, cur_time=False):
         if datetime.datetime.now() - self.last_ticket_time < self.duplicate_interval_datetime and self.last_ticket_id == id:
@@ -21,7 +26,7 @@ class MatchesHistory:
         last_ticket_id = id
         Database_Coms.exceute_query(''' INSERT INTO detection_history(id,time_date,image)
                       VALUES(?,?,?) ''', (str(id), time, image_obj))
-
+        self.logger.info('Ticket stored in match history')
         rows = Database_Coms.exceute_query(''' SELECT * FROM detection_history WHERE id=? ''',
                                            (id,), retRows=True)
         for entry in rows:

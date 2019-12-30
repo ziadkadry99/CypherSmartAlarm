@@ -4,6 +4,11 @@ import cv2
 class CameraComs:
 
     cap = cv2.VideoCapture(0)
+    logger = None
+
+    def __init__(self, logger):
+        self.logger = logger
+
 
     def get_frame(self):
         ret, frame = self.cap.read()
@@ -16,6 +21,7 @@ class CameraComs:
     def destruct(self):
         self.cap.release()
         cv2.destroyAllWindows()
+        self.logger.debug('Camera Communication module destructed')
 
     def get_width(self):
         return self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)

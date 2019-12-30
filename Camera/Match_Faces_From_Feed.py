@@ -7,11 +7,18 @@ from Databases.face_encodings_database import FaceEncodingsDatabase as fcd
 from Databases.Matches_History import MatchesHistory
 
 
-FCD = fcd()
-camera_coms = CameraComs()
-matches_history = MatchesHistory()
 
 class MatchFaceFromFeed:
+    FCD = None
+    camera_coms = None
+    matches_history = None
+    logger = None
+
+    def __init__(self, _logger):
+        self.logger = _logger
+        self.camera_coms = CameraComs(self.logger)
+        self.matches_history = MatchesHistory(self.logger)
+        self.FCD = fcd(self.logger)
 
     def get_face_matches(self):
 
@@ -19,9 +26,10 @@ class MatchFaceFromFeed:
         process_frequancy = 2
         start_time = time.time()
         elapsed_time = 0
+
         while True:
 
-            frame = camera_coms.get_frame()
+            frame = self.camera_coms.get_frame()
 
             # Resize frame of video to 1/4 size for faster face recognition processing
             small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
@@ -45,24 +53,26 @@ class MatchFaceFromFeed:
                 face_names = []
                 for face_encoding in face_encodings:
                     # See if the face is a match for the known face(s)
-                    matches = face_recognition.compare_faces(list(FCD.known_face_encodings.values()), face_encoding)
+                    matches = face_recognition.compare_faces(list(self.FCD.known_face_encodings.values()), face_encoding)
                     name = "Unknown"
 
-                    face_distances = face_recognition.face_distance(list(FCD.known_face_encodings.values()), face_encoding)
+                    face_distances = face_recognition.face_distance(list(self.FCD.known_face_encodings.values()), face_encoding)
                     best_match_index = np.argmin(face_distances)
                     if matches[best_match_index]:
-                        name = list(FCD.known_face_names.values())[best_match_index]
-                        match_id = list(FCD.known_face_names.keys())[best_match_index]
+                        name = list(self.FCD.known_face_names.values())[best_match_index]
+                        match_id = list(self.FCD.known_face_names.keys())[best_match_index]
 
                     face_names.append(name)
 
                     # Display the results
                     for (top, right, bottom, left), name in zip(face_locations, face_names):
                         if name == "Unknown":
-                            id = FCD.store_new_encoding(None, "Unknown Person", face_encoding, frame)
-                            matches_history.store_ticket(id, None, frame, True)
+                            id = self.FCD.store_new_encoding(None, "Unknown Person", face_encoding, frame)
+                            self.logger.info('Unknown face found. Added to database')
+                            self.matches_history.store_ticket(id, None, frame, True)
                         else:
-                            matches_history.store_ticket(best_match_index + 1, None, frame, True)
+                            self.matches_history.store_ticket(best_match_index + 1, None, frame, True)
+                            self.logger.info('face with id: ' +  str(match_id) +' name: ' + name + ' found.')
                         # Scale back up face locations since the frame we detected in was scaled to 1/4 size
                         top *= 4
                         right *= 4
