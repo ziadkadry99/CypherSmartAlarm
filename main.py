@@ -13,6 +13,7 @@ fed_obj = fed(logger)
 
 Database_Coms_obj.init_db_tables()
 #fed_obj.store_new_encoding("Test_Images/ziad.jpg", "Ziad")
+#fed_obj.store_new_encoding("Test_Images/Rihanna.jpg", "Rihanna")
 
 fed_obj.load_database()
 fed_obj.debug_print_names()
