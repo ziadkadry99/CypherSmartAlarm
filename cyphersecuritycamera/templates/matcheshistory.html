@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+	<div class="row">
+		<h2>Match History</h2>
+	</div>
+	<div class="container">
+		<div class="row">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Name</th>
+						<th>TimeStamp</th>
+						<th>Image</th>
+						<th class="text-right">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for ticket in get_match_tickets() %}
+					<tr>
+						<td>{{ ticket.id }}</td>
+						<td>{{ ticket.name }}</td>
+						<td>{{ ticket.time_date }}</td>
+						<td><img src="/thumbnails/{{ ticket.id }}" alt="" /></td>
+						<td class="text-right">
+							<!-- <a href="archive/{{ ticket.id }}" class="btn btn-success"><i class="fas fa-play fa-fw"></i>Play</a> -->
+							<a href="/thumbnails/delete/{{ ticket.id }}" class="btn btn-danger"><i class="fas fa-trash fa-fw"></i>Delete</a>
+						</td>
+					</tr>
+
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{% endblock %}

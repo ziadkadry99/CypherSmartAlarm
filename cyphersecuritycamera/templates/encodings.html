@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+	<div class="row">
+		<h2>Face Encodings</h2>
+	</div>
+	<div class="container">
+		<div class="row">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Name</th>
+						<th>Image</th>
+						<th class="text-right">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for encoding in get_encodings() %}
+					<tr>
+						<td>{{ encoding.id }}</td>
+						<td>{{ encoding.name }}</td>
+						<td><img src="encoding/{{ encoding.id }}" alt="" style="width:600px;height:400px;" /></td>
+						<td class="text-right">
+
+							<a href="/encoding/delete/{{ encoding.id }}" class="btn btn-danger"><i class="fas fa-trash fa-fw"></i>Delete</a>
+							<a href="/encoding/update/{{ encoding.id }}" class="btn btn-warning"><i class="fas fa-pen fa-fw"></i> Edit </a>
+						</td>
+					</tr>
+
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{% endblock %}

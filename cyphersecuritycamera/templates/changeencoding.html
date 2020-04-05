@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="content-section">
+        <form method="post" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="col-md-12 text-center">
+                <legend class="border-bottom mb-4"> Change name </legend>
+                <td><img src="/encoding/{{ form.name.label }}" alt="" style="width:600px;height:400px;" /></td>
+                <div class="form-group">
+				
+					<div class="form-control-label">
+						Name
+					</div>
+                    
+
+                    {% if form.name.errors %}
+                        {{ form.name(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedbacl">
+                        {% for error in form.name.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                        {{ form.name(class="form-control form-control-lg") }}
+                    {% endif %}
+
+
+                </div>
+
+
+
+            </fieldset>
+
+            <div class="form-group col-md-12 text-center" >
+                {{ form.save(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+{% endblock %}
