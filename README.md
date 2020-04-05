@@ -1,4 +1,4 @@
-# CypherSecurityAlarm
+# CypherDoorbell
 Futuristic DIY Doorbell
 
 This project is built to run on a Raspberry PI 3
