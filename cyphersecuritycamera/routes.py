@@ -161,6 +161,7 @@ class Stream_Thread(threading.Thread):
 
 	def run(self):
 		while True:
+			frame = vc.get_processed_frame()
 			sound = nd.get_chunk()
 			socketio.emit('sound', {'chunk': sound})
 			time.sleep(0.05)
